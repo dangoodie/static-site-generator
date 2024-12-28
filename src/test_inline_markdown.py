@@ -1,6 +1,6 @@
 import unittest
 
-from inline_markdown import split_nodes_delimiter
+from inline_markdown import *
 from textnode import TextNode, TextType
 
 
@@ -58,6 +58,50 @@ class TestInlineMarkdown(unittest.TestCase):
         new_nodes = split_nodes_delimiter(old_nodes, "**", TextType.BOLD)
         self.assertEqual(len(new_nodes), 1)
         self.assertEqual(new_nodes[0], TextNode("This is a text node", TextType.NORMAL))
+
+    def test_extract_markdown_images(self):
+        """Test extraction from markdown of a single image"""
+        text = "![alt text](https://www.google.com)"
+        images = extract_markdown_images(text)
+        self.assertEqual(len(images), 1)
+        self.assertEqual(images[0], ("alt text", "https://www.google.com"))
+
+    def test_extract_markdown_images_multiple(self):
+        """Test extraction from markdown of multiple images"""
+        text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        images = extract_markdown_images(text)
+        self.assertEqual(len(images), 2)
+        self.assertEqual(images[0], ("rick roll", "https://i.imgur.com/aKaOqIh.gif"))
+        self.assertEqual(images[1], ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg"))
+
+    def test_extract_markdown_images_no_images(self):
+        """Test extraction from markdown with no images"""
+        text = "This is text with no images"
+        images = extract_markdown_images(text)
+        self.assertEqual(len(images), 0)
+
+    def test_extract_markdown_link(self):
+        """Test extraction from markdown of a single image"""
+        text = "[my website](https://dangoodie.github.io)"
+        links = extract_markdown_links(text)
+        self.assertEqual(len(links), 1)
+        self.assertEqual(links[0], ("my website", "https://dangoodie.github.io"))
+
+    def test_extract_markdown_links_multiple(self):
+        """Test extraction from markdown of multiple images"""
+        text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        links = extract_markdown_links(text)
+        self.assertEqual(len(links), 2)
+        self.assertEqual(links[0], ("to boot dev", "https://www.boot.dev"))
+        self.assertEqual(
+            links[1], ("to youtube", "https://www.youtube.com/@bootdotdev")
+        )
+
+    def test_extract_markdown_links_no_links(self):
+        """Test extraction from markdown with no images"""
+        text = "This is text with no links"
+        links = extract_markdown_links(text)
+        self.assertEqual(len(links), 0)
 
 
 if __name__ == "__main__":

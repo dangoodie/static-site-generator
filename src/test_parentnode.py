@@ -42,11 +42,11 @@ class TestParentNode(unittest.TestCase):
             tag="section",
             props={"class": "content", "id": "main"},
             children=[
-                LeafNode("h1", "Title"),
-                LeafNode("p", "This is a paragraph."),
+                LeafNode("h1", "Title", {"class": "heading"}),
+                LeafNode("p", "This is a paragraph.", {"class": "paragraph"}),
             ],
         )
-        expected = "<section class='content' id='main'><h1>Title</h1><p>This is a paragraph.</p></section>"
+        expected = "<section class='content' id='main'><h1 class='heading'>Title</h1><p class='paragraph'>This is a paragraph.</p></section>"
         self.assertEqual(node.to_html(), expected)
 
     def test_empty_children(self):

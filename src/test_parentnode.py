@@ -53,7 +53,6 @@ class TestParentNode(unittest.TestCase):
         """Test ParentNode with no children."""
         with self.assertRaises(ValueError):
             node = ParentNode(tag="div", children=list())
-            print(node)
 
     def test_invalid_tag(self):
         """Test ParentNode with invalid or missing tag."""

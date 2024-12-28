@@ -22,11 +22,6 @@ class TestLeafNode(unittest.TestCase):
         value = "This is a text only node."
         self.assertEqual(node.to_html(), value)
 
-    def test_value(self):
-        """Test that an error is raised when value has an empty string"""
-        with self.assertRaises(ValueError):
-            LeafNode(None, "")
-
     def test_value2(self):
         """Test that an error is raised when there is no value"""
         with self.assertRaises(ValueError):

@@ -34,6 +34,5 @@ class TestHTMLNode(unittest.TestCase):
         self.assertNotEqual(node.props_to_html(), value)
 
 
-
 if __name__ == "__main__":
     unittest.main()

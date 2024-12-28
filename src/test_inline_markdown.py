@@ -103,6 +103,108 @@ class TestInlineMarkdown(unittest.TestCase):
         links = extract_markdown_links(text)
         self.assertEqual(len(links), 0)
 
+    def test_split_node_images(self):
+        """Test splitting nodes by image"""
+        text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        nodes = split_nodes_image([TextNode(text, TextType.NORMAL)])
+        self.assertEqual(len(nodes), 4)
+        self.assertEqual(nodes[0], TextNode("This is text with a ", TextType.NORMAL))
+        self.assertEqual(
+            nodes[1],
+            TextNode("rick roll", TextType.IMAGE, "https://i.imgur.com/aKaOqIh.gif"),
+        )
+        self.assertEqual(nodes[2], TextNode(" and ", TextType.NORMAL))
+        self.assertEqual(
+            nodes[3],
+            TextNode("obi wan", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+        )
+
+    def test_split_node_images_single_image(self):
+        """Only image in text"""
+        text = "![rick roll](https://i.imgur.com/aKaOqIh.gif)"
+        nodes = split_nodes_image([TextNode(text, TextType.NORMAL)])
+        self.assertEqual(len(nodes), 1)
+        self.assertEqual(
+            nodes[0],
+            TextNode("rick roll", TextType.IMAGE, "https://i.imgur.com/aKaOqIh.gif"),
+        )
+
+    def test_split_node_images_trailing_text(self):
+        """Image followed by text"""
+        text = "Some starting text and then ![rick roll](https://i.imgur.com/aKaOqIh.gif) and some text. Followed by another image ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg) and even more text."
+        nodes = split_nodes_image([TextNode(text, TextType.NORMAL)])
+        self.assertEqual(len(nodes), 5)
+        self.assertEqual(
+            nodes[0], TextNode("Some starting text and then ", TextType.NORMAL)
+        )
+        self.assertEqual(
+            nodes[1],
+            TextNode("rick roll", TextType.IMAGE, "https://i.imgur.com/aKaOqIh.gif"),
+        )
+        self.assertEqual(
+            nodes[2],
+            TextNode(" and some text. Followed by another image ", TextType.NORMAL),
+        )
+        self.assertEqual(
+            nodes[3],
+            TextNode("obi wan", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+        )
+        self.assertEqual(nodes[4], TextNode(" and even more text.", TextType.NORMAL))
+
+    def test_split_node_links(self):
+        """Test splitting nodes by link"""
+        text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        nodes = split_nodes_link([TextNode(text, TextType.NORMAL)])
+        self.assertEqual(len(nodes), 4)
+        self.assertEqual(
+            nodes[0], TextNode("This is text with a link ", TextType.NORMAL)
+        )
+        self.assertEqual(
+            nodes[1],
+            TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
+        )
+        self.assertEqual(nodes[2], TextNode(" and ", TextType.NORMAL))
+        self.assertEqual(
+            nodes[3],
+            TextNode(
+                "to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"
+            ),
+        )
+
+    def test_split_node_links_single_link(self):
+        """Only link in text"""
+        text = "[to boot dev](https://www.boot.dev)"
+        nodes = split_nodes_link([TextNode(text, TextType.NORMAL)])
+        self.assertEqual(len(nodes), 1)
+        self.assertEqual(
+            nodes[0],
+            TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
+        )
+
+    def test_split_node_links_trailing_text(self):
+        """Link followed by text"""
+        text = "Some starting text and then [to boot dev](https://www.boot.dev) and some text. Followed by another link [to youtube](https://www.youtube.com/@bootdotdev) and even more text."
+        nodes = split_nodes_link([TextNode(text, TextType.NORMAL)])
+        self.assertEqual(len(nodes), 5)
+        self.assertEqual(
+            nodes[0], TextNode("Some starting text and then ", TextType.NORMAL)
+        )
+        self.assertEqual(
+            nodes[1],
+            TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),
+        )
+        self.assertEqual(
+            nodes[2],
+            TextNode(" and some text. Followed by another link ", TextType.NORMAL),
+        )
+        self.assertEqual(
+            nodes[3],
+            TextNode(
+                "to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"
+            ),
+        )
+        self.assertEqual(nodes[4], TextNode(" and even more text.", TextType.NORMAL))
+
 
 if __name__ == "__main__":
     unittest.main()

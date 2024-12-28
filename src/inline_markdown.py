@@ -39,3 +39,49 @@ def extract_markdown_links(text):
             raise ValueError("Invalid link")
         
     return matches
+
+def split_nodes_image(old_nodes):
+    new_nodes = list()
+    for node in old_nodes:
+        matches = extract_markdown_images(node.text)
+        remaining_text = node.text
+        for match in matches:
+            markdown_image_str = f"![{match[0]}]({match[1]})"
+            parts = remaining_text.split(markdown_image_str, 1)
+
+            # add the text before the image if not empty
+            if parts[0] != "":
+                new_nodes.append(TextNode(parts[0], TextType.NORMAL))
+            new_nodes.append(TextNode(match[0], TextType.IMAGE, match[1]))
+            remaining_text = parts[1]
+        
+        # add the remaining text if not empty
+        if remaining_text != "":
+            new_nodes.append(TextNode(remaining_text, TextType.NORMAL))
+
+        return new_nodes
+
+def split_nodes_link(old_nodes):
+    new_nodes = list()
+    for node in old_nodes:
+        matches = extract_markdown_links(node.text)
+        remaining_text = node.text
+        for match in matches:
+            markdown_link_str = f"[{match[0]}]({match[1]})"
+            parts = remaining_text.split(markdown_link_str, 1)
+
+            # add the text before the link if not empty
+            if parts[0] != "":
+                new_nodes.append(TextNode(parts[0], TextType.NORMAL))
+            new_nodes.append(TextNode(match[0], TextType.LINK, match[1]))
+            remaining_text = parts[1]
+        
+        # add the remaining text if not empty
+        if remaining_text != "":
+            new_nodes.append(TextNode(remaining_text, TextType.NORMAL))
+
+        return new_nodes
+
+
+def reconstruct_markdown_image_str(text, url):
+    return f"![{text}]({url})"

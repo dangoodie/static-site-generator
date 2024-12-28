@@ -5,38 +5,38 @@ from textnode import TextNode, TextType
 
 class TestTextNode(unittest.TestCase):
     def test_eq(self):
+        """Test equality of two TextNode objects."""
         node = TextNode("This is a text node", TextType.BOLD)
         node2 = TextNode("This is a text node", TextType.BOLD)
         self.assertEqual(node, node2)
 
     def test_eq_2(self):
+        """Test equality of two TextNode objects with None as the link."""
         node = TextNode("This is a text node", TextType.ITALIC)
         node2 = TextNode("This is a text node", TextType.ITALIC, None)
         self.assertEqual(node, node2)
 
     def test_eq_3(self):
+        """Test equality of two TextNode objects with None as the link."""
         node = TextNode("This is a text node", TextType.NORMAL)
         node2 = TextNode("This is a text node", TextType.NORMAL, None)
         self.assertEqual(node, node2)
 
     def test_ne(self):
+        """Test inequality of two TextNode objects."""
         node = TextNode("This is a text node", TextType.BOLD)
         node2 = TextNode("This is a text node", TextType.ITALIC)
         self.assertNotEqual(node, node2)
 
     def test_eq_link(self):
-        node = TextNode(
-            "This is a text node", TextType.LINK, "https://www.google.com"
-        )
-        node2 = TextNode(
-            "This is a text node", TextType.LINK, "https://www.google.com"
-        )
+        """Test equality of two TextNode objects with a link."""
+        node = TextNode("This is a text node", TextType.LINK, "https://www.google.com")
+        node2 = TextNode("This is a text node", TextType.LINK, "https://www.google.com")
         self.assertEqual(node, node2)
 
     def test_ne_link(self):
-        node = TextNode(
-            "This is a text node", TextType.LINK, "https://www.google.com"
-        )
+        """Test inequality of two TextNode objects with different links."""
+        node = TextNode("This is a text node", TextType.LINK, "https://www.google.com")
         node2 = TextNode(
             "This is a text node", TextType.LINK, "https://www.facebook.com"
         )

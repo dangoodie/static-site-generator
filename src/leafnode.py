@@ -3,7 +3,7 @@ from htmlnode import HTMLNode
 
 class LeafNode(HTMLNode):
     def __init__(self, tag, value, props=None):
-        if value is None:
+        if value is None or value is "":
             raise ValueError("LeafNode value cannot be empty")
         super().__init__(value=value, tag=tag, children=None, props=props)
 

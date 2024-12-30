@@ -25,25 +25,26 @@ def markdown_to_blocks(markdown):
 def block_to_block_type(block):
 
     # Match for headings
-    heading_regex = r"#{1,6} "
+    heading_regex = r"^#{1,6} "
     if re.match(heading_regex, block) and len(block) > (block.find(" ") + 1):
         return BlockType.HEADING
 
     # Match for code blocks
     lines = block.split("\n")
-    if lines[0].startswith("```") and lines[-1].startswith("```"):
+    if lines[0].strip().startswith("```") and lines[-1].strip().startswith("```"):
         return BlockType.CODE
 
     # Match for quotes
-    if all(line.startswith(">") for line in lines):
+    if all(line.strip().startswith(">") for line in lines):
         return BlockType.QUOTE
 
     # Match for unordered lists
-    if all(line.startswith("* ") or line.startswith("- ") for line in lines):
+    if all(line.strip().startswith("* ") or line.startswith("- ") for line in lines):
         return BlockType.UNORDERED_LIST
 
     # Match for ordered lists
-    # TODO Build ordered lists logic
+    if all(lines[i].strip().startswith(f"{i + 1}. ") for i in range(0, len(lines))):
+        return BlockType.ORDERED_LIST 
 
     # if none it must be paragraph!
     return BlockType.PARAGRAPH

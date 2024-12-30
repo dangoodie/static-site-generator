@@ -78,3 +78,13 @@ class TestBlocksMarkdown(unittest.TestCase):
         block = "* This is the first line\n- This is the second line"
         block_type = block_to_block_type(block)
         self.assertEqual(block_type, BlockType.UNORDERED_LIST)
+
+    def test_block_to_block_type_ol(self):
+        block = "1. First\n2. Second\n3. Third"
+        block_type = block_to_block_type(block)
+        self.assertEqual(block_type, BlockType.ORDERED_LIST)
+
+    def test_block_to_block_type_ol2(self):
+        block = "2. Second\n3. Third"
+        block_type = block_to_block_type(block)
+        self.assertNotEqual(block_type, BlockType.ORDERED_LIST)

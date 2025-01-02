@@ -91,9 +91,6 @@ def hello():
 </code></pre></div>"""
 
         result = markdown_to_html_node(markdown).to_html()
-        print()
-        print(result)
-        print()
         self.assertEqual(result, expected_html)
 
 

@@ -1,6 +1,6 @@
 import os
 from copy_static import *
-from generate_page import generate_page
+from generate_page import *
 
 def main():
     project_root = get_project_root()
@@ -17,10 +17,9 @@ def main():
     # Recursively copy the source folder to the destination
     copy_source_to_dest(source, dest)
 
-    markdown = os.path.join(content, "index.md")
+    # Generate pages from markdown files
     template = os.path.join(project_root, "template.html")
-    generate_page(markdown, template, dest)
-
+    generate_page_recursive(content, template, dest)
 
 if __name__ == "__main__":
     main()

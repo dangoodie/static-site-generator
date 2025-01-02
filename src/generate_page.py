@@ -42,4 +42,16 @@ def generate_page(from_path, template_path, dest_path):
 
     print(f"Page successfully generated at: {output_file_path}")
 
+def generate_page_recursive(dir_path_content, template_path, dest_dir_path):
+    contents = os.listdir(dir_path_content)
+
+    for item in contents:
+        item_path = os.path.join(dir_path_content, item)
+
+        if os.path.isdir(item_path):
+            dest_dir_path = os.path.join(dest_dir_path, item)
+            os.mkdir(dest_dir_path)
+            generate_page_recursive(item_path, template_path, dest_dir_path)
+        else:
+            generate_page(item_path, template_path, dest_dir_path)
 

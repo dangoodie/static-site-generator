@@ -226,6 +226,21 @@ class TestInlineMarkdown(unittest.TestCase):
             textnodes,
         )
 
+    def test_split_nodes_starting_bold(self):
+        """Test splitting of nodes starting with a bold delimiter"""
+        text = "**I like Tolkien**. Read my [first post here](/majesty) (sorry the link doesn't work yet)"
+        textnodes = text_to_textnodes(text)
+
+        self.assertEqual(
+            [
+                TextNode("I like Tolkien", TextType.BOLD),
+                TextNode(". Read my ", TextType.NORMAL),
+                TextNode("first post here", TextType.LINK, "/majesty"),
+                TextNode(" (sorry the link doesn't work yet)", TextType.NORMAL),
+            ],
+            textnodes
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -9,13 +9,14 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
     for node in old_nodes:
         parts = node.text.split(delimiter)
 
-        toggle = node.text.startswith(delimiter)
+        toggle = False
 
-        for part in parts:
+        for i, part in enumerate(parts):
             if part:
                 new_node = TextNode(part, text_type if toggle else node.text_type)
                 new_nodes.append(new_node)
-            toggle = not toggle
+            if i < len(parts) - 1:
+                toggle = not toggle
 
     return new_nodes
 

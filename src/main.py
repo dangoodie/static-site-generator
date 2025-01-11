@@ -1,4 +1,5 @@
 import os
+import cProfile
 from copy_static import *
 from generate_page import *
 
@@ -22,4 +23,9 @@ def main():
     generate_page_recursive(content, template, dest)
 
 if __name__ == "__main__":
+    profiler = cProfile.Profile()
+    profiler.enable()
     main()
+    profiler.disable()
+    profiler.print_stats(sort='cumtime')
+    profiler.dump_stats("profile_results.prof")
